@@ -33,9 +33,9 @@ app.get('/',(req,res)=>{
 
 
 
-app.get('/secret',auth,async(req,res)=>{
-res.render("test")
-})
+// app.get('/secret',auth,async(req,res)=>{
+// res.render("secret")
+// })
 
 app.get('/logout',auth,async(req,res)=>{
 try {
@@ -62,6 +62,10 @@ try {
 app.get('/register',(req,res)=>{
     res.sendFile('register.html', { root: path.join(__dirname, '../public') });
 })
+app.get('/confirm',(req,res)=>{
+    res.sendFile('confirm.html', { root: path.join(__dirname, '../public') });
+})
+
 app.get('/login',(req,res)=>{
     // res.render("login")
     res.sendFile('login.html', { root: path.join(__dirname, '../public') });
