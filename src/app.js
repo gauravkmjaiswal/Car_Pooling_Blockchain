@@ -66,6 +66,7 @@ app.get('/confirm',(req,res)=>{
     res.sendFile('confirm.html', { root: path.join(__dirname, '../public') });
 })
 
+
 app.get('/login',(req,res)=>{
     // res.render("login")
     res.sendFile('login.html', { root: path.join(__dirname, '../public') });

@@ -186,7 +186,7 @@ h2 {
   font-size: 36px; }
 
 .main {
-  background: #f8f8f8;
+  background: #ffc61a;
   padding: 150px 0; }
 
 .clear {
@@ -266,7 +266,7 @@ body {
   margin-bottom: 33px; }
 
 .signup-image {
-  margin-top: 45px; }
+  margin-top: 105px; }
 
 figure {
   margin-bottom: 50px;
@@ -513,7 +513,7 @@ label.valid {
 .signin-image {
   margin-left: 110px;
   margin-right: 20px;
-  margin-top: 10px; }
+  margin-top: 70px; }
 
 @media screen and (max-width: 1200px) {
   .container {

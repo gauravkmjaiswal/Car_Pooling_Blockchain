@@ -3,6 +3,7 @@ const GetLocation = async  (location)=>{
     
     let raw = await fetch(`https://geocode.xyz/?region=Asia&geoit=JSON&locate=${location}&auth=318997707352694419749x26131 )`);
     const dataCollection=await raw.json()
+    console.log(dataCollection.latt+" @ "+dataCollection.longt)
     return({"lati":dataCollection.latt,"long":dataCollection.longt})
 }
 
@@ -27,7 +28,7 @@ const searchLocation =async() =>{
                 <h2>OLA class</h2>
                 
                 <h3>price: ${prices.OLA.estimate.toFixed(2)} /-</h3>
-                <a href="/confirm">order now</a>
+                <a href="/confirm" class="OLA">order now</a>
             </div>
         </div>
 
@@ -37,7 +38,7 @@ const searchLocation =async() =>{
                 <h2 class="heading-yellow">RAPIDO class</h2>
                 
                 <h3 class="yellw-section">price:${prices.RAPIDO.estimate.toFixed(2)} /-</h3>
-                <a href="/confirm" class="btn-yellow">order now</a>
+                <a href="/confirm" class="btn-yellow RAPIDO">order now</a>
             </div>
         </div>
 
@@ -47,10 +48,41 @@ const searchLocation =async() =>{
                 <h2>UBER class</h2>
                 
                 <h3>price: ${prices.UBER.estimate.toFixed(2)} /-</h3>
-                <a href="/confirm">order now</a>
+                <a href="/confirm" class="UBER">order now</a>
             </div>
         </div>
     </div>`
-    document.querySelector('.Cards').innerHTML+=data
 
+    
+    document.querySelector('.Cards').innerHTML+=data
+    await document.querySelector(".UBER").addEventListener('mouseover',UberClicker);
+    await document.querySelector(".OLA").addEventListener('mouseover',OlaClicker);
+    await document.querySelector(".RAPIDO").addEventListener('mouseover',RapidoClicker);
+    // document.querySelector(".").addEventListener("mouseover", onclick);
+
+    function UberClicker() {
+        console.log("gaurav km jaiswal")
+        let sendData={
+            prices,
+            id:3
+        }
+        localStorage.setItem( 'objectToPass',JSON.stringify(sendData) );
+    }
+    function OlaClicker() {
+        console.log("gaurav km jaiswal2")
+        let sendData={
+            prices,
+            id:1
+        }
+        localStorage.setItem( 'objectToPass',JSON.stringify(sendData) );
+    }
+    function RapidoClicker() {
+        console.log("gaurav km jaiswal3")
+        let sendData={
+            prices,
+            id:2
+        }
+        localStorage.setItem( 'objectToPass',JSON.stringify(sendData) );
+    }
+    
 }
