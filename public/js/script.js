@@ -1,4 +1,3 @@
-console.log('hello gaurav');
 const searchDisplay = ' <input class="search"> <img src="image/search.svg" height="80%">';
 //document.querySelector('.search_bar').innerHTML=searchDisplay;
 const NoteBox =`<form action="/Notes" method="POST"  id="note">
