@@ -55,7 +55,10 @@ app.get('/register',(req,res)=>{
 app.get('/confirm',(req,res)=>{
     res.sendFile('confirm.html', { root: path.join(__dirname, '../public') });
 })
-
+app.get('/bookride',(req,res)=>{
+    console.log('ss')
+    res.sendFile('book.html',{root:path.join(__dirname,'../public')})
+})
 
 app.get('/login',(req,res)=>{
     // res.render("login")
