@@ -1,7 +1,7 @@
 var rawData = localStorage.getItem("objectToPass");
-localStorage.clear();
+// localStorage.clear();
 var data=JSON.parse(rawData)
-console.log(data)
+
 
 let display = (price,name)=>{
     element=`<div style="display:flex;flex-direction:row">
@@ -37,4 +37,33 @@ else if(data.id==2)
 else if(data.id==3)
 {
     display(data.prices.UBER.estimate,"Uber")
+}
+
+async function myFunction(){
+    const blockchainData = {
+        fileHash: "dfasfd",
+        senderIpaddress: "14.139.238.98"
+    }
+    let carSelect = ''
+    let price
+    if(data.id === 1){
+        carSelect = 'OLA'
+        price = data.prices.OLA.estimate
+    }else if(data.id === 2){
+        carSelect = 'Rapido'
+        price = data.prices.RAPIDO.estimate
+    }
+    else{
+        carSelect = 'Uber'
+        price = data.prices.UBER.estimate
+    }
+    await fetch("http://localhost:8000/transaction", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify({ serviceProvide:carSelect , price:price })
+    })
 }

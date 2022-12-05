@@ -13,16 +13,15 @@ const RegisterPeople=require("./models/registers")
 const static_path=path.join(__dirname,"../public")
 const template_path = path.join(__dirname,"../templates/views")
 const partials_path = path.join(__dirname,"../templates/partials")
-// console.log(static_path)
-// app.use(express.json())
-// app.use(cookieParser())
-// app.use(express.urlencoded({extended:false}))
-// app.use(express.static(static_path));
+const bodyParser = require('body-parser');
+const Blockchain = require('./blockchain');
+const rp = require('request-promise');
+
+const bitcoin = new Blockchain();
+
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(cors())
-
 
 app.set("view engine", "hbs");
 app.set("views",template_path);
@@ -30,12 +29,6 @@ hbs.registerPartials(partials_path)
 app.get('/',(req,res)=>{
     res.render("index")
 })
-
-
-
-// app.get('/secret',auth,async(req,res)=>{
-// res.render("secret")
-// })
 
 app.get('/logout',auth,async(req,res)=>{
 try {
@@ -103,8 +96,6 @@ app.post('/login',async (req,res)=>{
       }
  
     }catch(error){
-        // res.status(400).send("wrong details what")
-
         console.log("hello")
     }
 })
@@ -116,7 +107,7 @@ app.post('/register',async (req,res)=>{
         const re_pas= req.body.re_pass;
         if(pas!==re_pas)
         {
-            return res.send("password and coonfirm password are diffrent !!!")
+            return res.send("password and confirm password are diffrent !!!")
         }
 
 
@@ -206,13 +197,60 @@ function getRapidoData(BaseFare,distance){
 app.get('/getEstimate',async (req,res)=>{
    console.log(req.query)
     const distance = getDistance(req.query.startLatitude, req.query.startLongitude, req.query.endLatitude, req.query.endLongitude)
-    const value = Math.floor(Math.random() * (50) + 1)
+    let value = Math.floor(Math.random() * (50) + 1)
     const UberPrice = getUberData(30+value,distance)
+    value = Math.floor(Math.random() * (50) + 1)
     const OlaPrice = getOlaData(27+value,distance)
+    value = Math.floor(Math.random() * (50) + 1)
     const rapidoPrice = getRapidoData(31+value,distance)
     console.log(rapidoPrice)
     res.send({"UBER":UberPrice,"OLA":OlaPrice,"RAPIDO":rapidoPrice})
 })
+
+app.get('/blockchain', function (req, res) {
+    res.send(bitcoin);
+});
+
+// create a new transaction
+
+app.post('/transaction', function (req, res) {
+    const newTransaction = req.body;
+    const blockIndex = bitcoin.addTransactionToPendingTransactions(newTransaction);
+    res.json({ note: `Transaction will be added in block ${blockIndex}.` });
+});
+
+app.get('/mine', function (req, res) {
+    const lastBlock = bitcoin.getLastBlock();
+    const previousBlockHash = lastBlock['hash'];
+    const currentBlockData = {
+        transactions: bitcoin.pendingTransactions,
+        index: lastBlock['index'] + 1
+    };
+    const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
+    const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+    const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
+
+    const requestPromises = [];
+    bitcoin.networkNodes.forEach(networkNodeUrl => {
+        const requestOptions = {
+            uri: networkNodeUrl + '/receive-new-block',
+            method: 'POST',
+            body: { newBlock: newBlock },
+            json: true
+        };
+
+        requestPromises.push(rp(requestOptions));
+    });
+
+    Promise.all(requestPromises)
+        .then(data => { })
+        .then(data => {
+            res.json({
+                note: "New block mined & broadcast successfully",
+                block: newBlock
+            });
+        });
+});
 
 app.listen(port,()=>{
     console.log("server is working well")
