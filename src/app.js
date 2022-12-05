@@ -29,28 +29,25 @@ hbs.registerPartials(partials_path)
 app.get('/',(req,res)=>{
     res.render("index")
 })
+app.get('/logout', auth, async (req, res) => {
+    try {
 
-app.get('/logout',auth,async(req,res)=>{
-try {
-   
-    req.user.tokens=req.user.tokens.filter((cur)=>{
-      if(cur.token!==req.token)
-      {
-            return 1
-      }
-      else
-      {
-            return 0
-      }
-    })
+        req.user.tokens = req.user.tokens.filter((cur) => {
+            if (cur.token !== req.token) {
+                return 1
+            }
+            else {
+                return 0
+            }
+        })
 
-    res.clearCookie("jwtlogin")
-    await req.user.save();
-    res.render("login")
- 
-} catch (error) {
-    res.status(401).send(error)
-}
+        res.clearCookie("jwtlogin")
+        await req.user.save();
+        res.sendFile('login.html', { root: path.join(__dirname, '../public') });
+
+    } catch (error) {
+        res.status(401).send(error)
+    }
 })
 app.get('/register',(req,res)=>{
     res.sendFile('register.html', { root: path.join(__dirname, '../public') });
@@ -58,7 +55,10 @@ app.get('/register',(req,res)=>{
 app.get('/confirm',(req,res)=>{
     res.sendFile('confirm.html', { root: path.join(__dirname, '../public') });
 })
-
+app.get('/bookride',(req,res)=>{
+    console.log('ss')
+    res.sendFile('book.html',{root:path.join(__dirname,'../public')})
+})
 
 app.get('/login',(req,res)=>{
     // res.render("login")
