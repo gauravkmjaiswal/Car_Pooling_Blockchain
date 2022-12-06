@@ -6,7 +6,7 @@ const cookieParser=require("cookie-parser")
 const bcrypt= require("bcryptjs")
 const auth=require("./middleware/auth")
 const app = express()
-const { uuid } = require('uuidv4');
+const { v4: uuidv4 } = require('uuid')
 const port= process.env.PORT || 8000
 require("./db/connection.js")
 const RegisterPeople=require("./models/registers")
@@ -53,6 +53,7 @@ app.get('/register',(req,res)=>{
     res.sendFile('register.html', { root: path.join(__dirname, '../public') });
 })
 app.get('/confirm',(req,res)=>{
+    
     res.sendFile('confirm.html', { root: path.join(__dirname, '../public') });
 })
 app.get('/bookride',(req,res)=>{
@@ -148,7 +149,7 @@ function getDistance(lat1,lon1,lat2,lon2){
 
 function getUberData(BaseFare,distance) {
    
-    const id = uuid()
+    const id = uuidv4()
     const displayName = "Uber-go"   
     let estimate = 0
     if(distance >=5){
@@ -164,7 +165,7 @@ function getUberData(BaseFare,distance) {
 }
 
 function getOlaData(BaseFare,distance) {
-    const id = uuid()
+    const id = uuidv4()
     const displayName = "OLA mini"
     let estimate
     if (distance >= 5) {
@@ -178,9 +179,8 @@ function getOlaData(BaseFare,distance) {
         estimate
     }
 }
-
 function getRapidoData(BaseFare,distance){
-    const id = uuid()
+    const id = uuidv4()
     const displayName = "Rapido Swiss"
     let estimate
     if (distance >= 5) {
